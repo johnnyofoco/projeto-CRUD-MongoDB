@@ -1,20 +1,24 @@
 const express = require('express')
 const { use } = require('express/lib/application')
 const path = require('path')
+const db = require('./database')
 
 const app = express()
 
-// definindo o template engine
+// Conexão bd
+db.connect()
+
+// Definindo o template engine
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
-// definindo os arquivos públicos
+// Definindo os arquivos públicos
 app.use(express.static(path.join(__dirname, 'public')))
 
-//habilita server para receber dados via post (formulário)
+// Habilita server para receber dados via post (formulário)
 app.use(express.urlencoded({ extended: true }))
 
-//rotas
+// Rotas
 app.get('/', (req, res) => {
   res.render('index', {
     title: 'Home'
@@ -22,10 +26,10 @@ app.get('/', (req, res) => {
 })
 
 // 404 error (not found)
-app.use((req,res) => {
+app.use((req, res) => {
   res.send('Página não encontrada!')
 })
 
-//executando o servidor
+// Executando o servidor
 const port = process.env.PORT || 8080
 app.listen(port, () => console.log(`Server is listening on port ${port}`))
