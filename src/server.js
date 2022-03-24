@@ -7,6 +7,7 @@ const routes = require('./routes')
 
 const app = express()
 
+
 // Conexão bd
 db.connect()
 

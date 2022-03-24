@@ -1,7 +1,7 @@
-const res = require('express/lib/response')
 const customersModel = require('../models/customers')
+const { crypto } = require('../utils/passwords')
 
-function add(req, res) {
+async function add(req, res) {
   const {
     name,
     age,
@@ -9,11 +9,13 @@ function add(req, res) {
     password,
   } = req.body
 
+  const passwordCrypto = await crypto(password)
+
   const register = new customersModel({
-    name,
+    name, //chave e valor iguais
     age,
     email,
-    password,
+    password: passwordCrypto,
   })
   
   register.save()
