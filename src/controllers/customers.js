@@ -3,19 +3,14 @@ const { crypto } = require('../utils/passwords')
 
 const defaultTitle = 'Cadastro de clientes'
 
-function index(req, res) {
+function index (req, res) {
   res.render('register', {
     title: defaultTitle
   })
 }
 
-async function add(req, res) {
-  const {
-    name,
-    age,
-    email,
-    password,
-  } = req.body
+async function add (req, res) {
+  const { name, age, email, password } = req.body
 
   const passwordCrypto = await crypto(password)
 
@@ -23,46 +18,41 @@ async function add(req, res) {
     name, //chave e valor iguais
     age,
     email,
-    password: passwordCrypto,
+    password: passwordCrypto
   })
-  
+
   register.save()
   res.render('register', {
     title: defaultTitle,
-    message: 'Cadastro realizado com sucesso!',
-
+    message: 'Cadastro realizado com sucesso!'
   })
 }
 
-async function list(req, res) {
+async function list (req, res) {
   const users = await CustomersModel.find()
 
   res.render('list', {
     title: 'Listagem de clientes',
-    users,
+    users
   })
 }
 
-async function formEdit(req, res) {
+async function formEdit (req, res) {
   const { id } = req.query
-  
+
   const user = await CustomersModel.findById(id)
 
-  res.render('edit',{
+  res.render('edit', {
     title: 'Editar usuário',
     user
   })
 }
 
-async function edit(req, res) {
-  const {
-    name,
-    age,
-    email
-  } = req.body
+async function edit (req, res) {
+  const { name, age, email } = req.body
 
-  const { id } = req.params 
-  
+  const { id } = req.params
+
   const user = await CustomersModel.findById(id)
 
   user.name = name
@@ -76,7 +66,15 @@ async function edit(req, res) {
     user,
     message: 'Usuário alterado com sucesso!'
   })
+}
 
+async function remove (req, res) {
+  const { id } = req.params
+
+  const remove = await CustomersModel.deleteOne({ _id: id })
+  if (remove.deletedCount === 1) {
+    res.redirect('/list')
+  }
 }
 
 module.exports = {
@@ -84,5 +82,6 @@ module.exports = {
   add,
   list,
   formEdit,
-  edit
+  edit,
+  remove
 }
